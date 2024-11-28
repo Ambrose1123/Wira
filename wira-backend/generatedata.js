@@ -79,7 +79,7 @@ async function generateData() {
     const characters = await client.query('SELECT * FROM character');
     for (let i = 0; i < characters.rows.length; i++) {
       const char_id = characters.rows[i].char_id;
-      const reward_score = faker.number.int({ min: 0, max: 1000000 }); //seting the reward score to be random from 0 to 1000000
+      const reward_score = faker.number.int({ min: 0, max: 999999 }); //seting the reward score to be random from 0 to 1000000
 
       const scoreQuery = `
         INSERT INTO scores (char_id, reward_score)

@@ -23,7 +23,7 @@ export const getRankings = async (req, res) => {
   
       // Add sorting, pagination, and final query structure
       baseQuery += `
-        ORDER BY scores.reward_score DESC
+        ORDER BY scores.reward_score DESC, character.char_id ASC
         LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}
       `;
       queryParams.push(limit, offset);
