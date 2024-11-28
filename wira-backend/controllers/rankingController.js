@@ -1,9 +1,19 @@
 import { query } from "../db.js";
+import redisClient from "../index.js"; // Import Redis client
 
 export const getRankings = async (req, res) => {
     try {
       const { search = "", limit = 10, offset = 0, class_id } = req.query;
-  
+
+      // Generate a unique cache key based on query parameters
+      const cacheKey = `rankings:${search}:${limit}:${offset}:${class_id || "all"}`;
+
+      // Check if the data is already cached in Redis
+      const cachedData = await redisClient.get(cacheKey);
+      if (cachedData) {
+      console.log("Serving data from cache");
+      return res.json(JSON.parse(cachedData)); // Serve cached data
+      }
       // Build the base query(show username all class id and reward score)
       let baseQuery = `
         SELECT account.username, character.class_id, scores.reward_score
@@ -29,8 +39,12 @@ export const getRankings = async (req, res) => {
       queryParams.push(limit, offset);
   
       const result = await query(baseQuery, queryParams);
+
+      // Cache the results with a 1-hour expiration
+    await redisClient.setEx(cacheKey, 3600, JSON.stringify(result.rows));
   
-      res.json(result.rows);
+    console.log("Serving data from database");  
+    res.json(result.rows);
     } catch (error) {
       console.error(error);
       res.status(500).json({ success: false, error: "Server Error" });
