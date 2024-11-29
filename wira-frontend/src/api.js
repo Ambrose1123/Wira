@@ -15,3 +15,18 @@ export async function fetchRankings(search = "", limit = 10, offset = 0, classId
     throw error;
   }
 }
+
+// Fetch the maximum char_id to calculate total pages
+export async function fetchMaxCharId() {
+  try {
+    const response = await fetch(`${BASE_URL}/api/max-char-id`);
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data.maxCharId; // Return the maxCharId value
+  } catch (error) {
+    console.error("API Error:", error);
+    throw error;
+  }
+}

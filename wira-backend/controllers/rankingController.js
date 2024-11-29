@@ -51,3 +51,19 @@ export const getRankings = async (req, res) => {
     }
   };
   
+  export const getMaxCharId = async (req, res) => {
+    try {
+      // Query to fetch the maximum char_id
+      const maxCharIdQuery = `
+        SELECT MAX(char_id) AS max_char_id FROM character;
+      `;
+      const maxCharIdResult = await query(maxCharIdQuery);
+  
+      const maxCharId = maxCharIdResult.rows[0]?.max_char_id || 0; // Default to 0 if no data
+      res.json({ maxCharId }); // Return the result
+    } catch (error) {
+      console.error("Error fetching max char_id:", error);
+      res.status(500).json({ success: false, error: "Failed to fetch max char_id" });
+    }
+  };
+  
