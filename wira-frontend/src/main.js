@@ -1,9 +1,7 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import App from './App.vue'
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router/router.js"; // Import router
 
-const app = createApp(App)
-
-app.use(createPinia())
-
-app.mount('#app')
+const app = createApp(App);
+app.use(router); // Use the router instance
+app.mount("#app");
