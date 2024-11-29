@@ -22,6 +22,7 @@ redisClient.connect()
     console.log("Connected to Redis");
 
 app.use(cors());
+app.use(express.json()); // Enable JSON parsing
 
 // ensuring the host is working fine with displaying hello world
 app.get("/", (req, res) => {

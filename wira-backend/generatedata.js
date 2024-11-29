@@ -1,7 +1,9 @@
 import { faker } from '@faker-js/faker';  // import for Faker
 import pkg from 'pg';  // Import the entire 'pg' module as a default export
-const { Client } = pkg;  // Extract the Client class from the 'pg' module
+import bcrypt from 'bcrypt';
+import speakeasy from "speakeasy";
 
+const { Client } = pkg;  // Extract the Client class from the 'pg' module
 const client = new Client({
   user: 'postgres',  //username
   host: 'localhost',
@@ -9,6 +11,9 @@ const client = new Client({
   password: 'Ap79101123', //password for the database
   port: 5432,
 });
+
+// Number of salt rounds for password hashing
+const SALT_ROUNDS = 5;
 
 async function deleteAllData() {
   try {
@@ -32,10 +37,13 @@ async function generateData() {
     for (let i = 0; i < 100000; i++) {
       const username = faker.internet.username().substring(0, 10);  // call the username from faker and Truncate to 10 chars
       const email = faker.internet.email();  //call faker to generate email
+      const plainTextPassword = faker.internet.password(); // Generate a random password
+      const encryptedPassword = await bcrypt.hash(plainTextPassword, SALT_ROUNDS); // Hash the password
+      const secretKey2FA = speakeasy.generateSecret({ length: 20 }).base32; // TOTP-compatible Base32 key
 
       const accountQuery = `
-        INSERT INTO account (username, email)
-        VALUES ('${username}', '${email}')
+        INSERT INTO account (username, email, encrypted_password, secretkey_2fa)
+        VALUES ('${username}', '${email}', '${encryptedPassword}', '${secretKey2FA}')
       `;
       await client.query(accountQuery);  // Insert account data
 
