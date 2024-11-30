@@ -62,17 +62,31 @@ export async function login(username, password, twoFACode) {
 
 export async function logout() {
   const sessionId = localStorage.getItem("sessionId");
-  const response = await fetch(`${BASE_URL}/api/logout`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      sessionId,
-    },
-  });
 
-  if (!response.ok) {
-    throw new Error(await response.json());
+  if (!sessionId) {
+    console.error("No session ID found in localStorage.");
+    throw new Error("No session ID found. Please log in again.");
   }
 
-  localStorage.removeItem("sessionId"); // Clear session on logout
+  try {
+    const response = await fetch(`${BASE_URL}/api/logout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ sessionId }), // Send sessionId in the body
+    });
+
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      console.error("Logout failed with error:", errorResponse);
+      throw new Error(errorResponse.error || "Logout failed");
+    }
+
+    // Clear session data on successful logout
+    localStorage.removeItem("sessionId");
+  } catch (error) {
+    console.error("Logout failed:", error);
+    throw error;
+  }
 }
