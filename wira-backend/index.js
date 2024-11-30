@@ -3,6 +3,7 @@ import cors from "cors";
 import router from "./routes.js"; // Import routes
 import { query } from "./db.js"; // Import query function from db.js
 import redis from "redis"; // Import Redis client
+import { sessionCleanup } from "./middlewares/sessionCleanupMiddleware.js";
 
 const app = express();
 const port = 3000;
@@ -16,14 +17,16 @@ redisClient.on("error", (err) => {
   console.error("Redis error:", err);
 });
 
+app.use(cors());
+app.use(express.json()); // Enable JSON parsing
+
+setInterval(() => {
+  sessionCleanup();
+}, 10 * 60 * 1000); // 10 minutes in milliseconds
 // Ensure Redis connects before starting the server
 redisClient.connect()
   .then(() => {
     console.log("Connected to Redis");
-
-app.use(cors());
-app.use(express.json()); // Enable JSON parsing
-
 // ensuring the host is working fine with displaying hello world
 app.get("/", (req, res) => {
   res.send("Hello World!");
