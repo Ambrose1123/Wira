@@ -1,44 +1,75 @@
 <template>
   <div class="login-container">
     <h1>Login</h1>
-    <form @submit.prevent="handleLogin">
-      <input v-model="username" placeholder="Username" required />
+
+    <!-- Step 1: Login Form -->
+    <form v-if="!is2FARequired" @submit.prevent="handleLogin">
+      <input v-model="email" type="email" placeholder="Email" required />
       <input v-model="password" type="password" placeholder="Password" required />
-      <input v-model="twoFACode" placeholder="2FA Code" required />
       <button type="submit">Login</button>
     </form>
+
+    <!-- Step 2: 2FA Verification -->
+    <form v-else @submit.prevent="handle2FAVerification">
+      <p>A 2FA code has been sent to your email. Please enter it below:</p>
+      <input v-model="twoFACode" type="text" placeholder="2FA Code" required />
+      <button type="submit">Verify 2FA</button>
+    </form>
+
+    <!-- Error Message -->
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
   </div>
 </template>
 
 <script>
-import { login } from "@/api"; // Ensure this API function is implemented correctly
+import { login, verify2FA } from "@/api";
 
 export default {
   data() {
     return {
-      username: "",
+      email: "",
       password: "",
       twoFACode: "",
+      is2FARequired: false,
       errorMessage: "",
     };
   },
   methods: {
     async handleLogin() {
-      // Validate form fields
-      if (!this.username || !this.password || !this.twoFACode) {
-        this.errorMessage = "All fields are required.";
+      this.errorMessage = ""; // Clear any previous errors
+      if (!this.email || !this.password) {
+        this.errorMessage = "Email and password are required.";
         return;
       }
 
       try {
-        // Call login API
-        const response = await login(this.username, this.password, this.twoFACode);
-        localStorage.setItem("sessionId", response.sessionId); // Save session ID to localStorage
-        this.$router.push("/ranking"); // Redirect to ranking page
+        // Send login request
+        const response = await login(this.email, this.password);
+        console.log(response.message);
+        // If login is successful, show the 2FA input
+        this.is2FARequired = true;
       } catch (error) {
-        // Handle login errors
-        this.errorMessage = error.response?.data?.error || "Login failed. Please try again.";
+        // Display backend error message or fallback message
+        this.errorMessage = error.response?.data?.error || "An unexpected error occurred.";
+      }
+    },
+    async handle2FAVerification() {
+      this.errorMessage = ""; // Clear any previous errors
+      if (!this.twoFACode) {
+        this.errorMessage = "2FA code is required.";
+        return;
+      }
+
+      try {
+        // Send 2FA verification request
+        const response = await verify2FA(this.email, this.twoFACode);
+        console.log(response.message);
+        // Store session ID and redirect to rankings
+        localStorage.setItem("sessionId", response.sessionId);
+        this.$router.push("/ranking");
+      } catch (error) {
+        // Display backend error message or fallback message
+        this.errorMessage = error.response?.data?.error || "Invalid 2FA code.";
       }
     },
   },

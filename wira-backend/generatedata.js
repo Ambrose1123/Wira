@@ -32,9 +32,27 @@ async function generateData() {
     // Call deleteAllData before generating new data
     await deleteAllData();
 
+    // Insert a predefined test account
+    console.log('Inserting test account...');
+    const testUsername = 'Test123'; // Specify the username
+    const testEmail = 'likai.phong@gmail.com'; // Specify the email
+    const testPassword = 'abc123'; // Specify the plain-text password
+    const encryptedPassword = await bcrypt.hash(testPassword, SALT_ROUNDS); // Hash the password
+    const testSecretKey2FA = speakeasy.generateSecret({ length: 20 }).base32; // Generate secret key for 2FA
+
+    const testAccountQuery = `
+      INSERT INTO account (username, email, encrypted_password, secretkey_2fa)
+      VALUES ('${testUsername}', '${testEmail}', '${encryptedPassword}', '${testSecretKey2FA}')
+    `;
+    await client.query(testAccountQuery);
+    console.log('Test account created:');
+    console.log(`  Username: ${testUsername}`);
+    console.log(`  Email: ${testEmail}`);
+    console.log(`  Password: ${testPassword}`);
+    console.log(`  2FA Secret Key: ${testSecretKey2FA}`);
     // Generate 100,000+ accounts
     console.log('Generating accounts...');
-    for (let i = 0; i < 100000; i++) {
+    for (let i = 1; i < 100000; i++) {
       const username = faker.internet.username().substring(0, 10);  // call the username from faker and Truncate to 10 chars
       const email = faker.internet.email();  //call faker to generate email
       const plainTextPassword = faker.internet.password(); // Generate a random password

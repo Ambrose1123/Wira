@@ -1,7 +1,8 @@
 <template>
   <div>
     <header>
-      <h1>WIRA Application</h1>
+      <h1>WIRA</h1>
+      <span v-if="isLoggedIn">Welcome to WIRA ranking!</span>
       <button v-if="isLoggedIn" @click="handleLogout">Logout</button>
     </header>
     <main>

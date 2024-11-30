@@ -8,3 +8,4 @@ bcrypt
 speakeasy
 uuid
 vue router
+node mailer

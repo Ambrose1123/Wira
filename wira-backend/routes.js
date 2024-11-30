@@ -1,17 +1,20 @@
 import express from "express";
-import { getRankings, getMaxCharId } from "./controllers/rankingController.js"; // Import the new function
-import { login,logout } from "./controllers/authController.js";
-import { validateSession } from "./middlewares/authMiddleware.js"; // Import middleware
+import { login, verify2FA, logout } from "./controllers/authController.js";
+import { getRankings, getMaxCharId } from "./controllers/rankingController.js";
+import { validateSession } from "./middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-// Route for rankings with search and pagination
-router.get("/ranking", validateSession,getRankings);
-
-// Route for fetching max char_id
-router.get("/max-char-id", validateSession,getMaxCharId); // Add this line
-
+// Login endpoint
 router.post("/login", login);
-// Route for logout
+// Logout endpoint
 router.post("/logout", logout);
+
+// Route for rankings (protected)
+router.get("/ranking", validateSession, getRankings);
+
+router.post("/verify-2fa", verify2FA);
+// Route for fetching max char_id (protected)
+router.get("/max-char-id", validateSession, getMaxCharId);
+
 export default router;

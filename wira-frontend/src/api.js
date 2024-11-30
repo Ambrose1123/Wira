@@ -44,22 +44,50 @@ export async function fetchMaxCharId() {
 }
 
 
-export async function login(username, password, twoFACode) {
-  const response = await fetch(`${BASE_URL}/api/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ username, password, twoFACode }),
-  });
+export async function login(email, password) {
+  try {
+    const response = await fetch(`${BASE_URL}/api/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
-  if (!response.ok) {
-    throw new Error(await response.json());
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Login failed");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Login failed:", error);
+    throw error;
   }
-
-  return await response.json();
 }
 
+// Verify 2FA function
+export async function verify2FA(email, twoFACode) {
+  try {
+    const response = await fetch(`${BASE_URL}/api/verify-2fa`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, twoFACode }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "2FA verification failed");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("2FA verification failed:", error);
+    throw error;
+  }
+}
 export async function logout() {
   const sessionId = localStorage.getItem("sessionId");
 

@@ -45,6 +45,10 @@ app.get("/test-db", async (req, res) => {
     res.status(500).json({ success: false, error: "Database connection failed" });
   }
 });
+app.all("*", (req, res) => {
+  console.log(`Unhandled request: ${req.method} ${req.path}`);
+  res.status(404).json({ error: "Endpoint not found" });
+});
 
 // Start the server
 app.listen(port, () => {
