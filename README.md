@@ -8,27 +8,41 @@ Authentication: Speakeasy for 2FA, bcrypt for password hashing
 
 ## . Prerequisites: Ensure you have the following installed:
 Node.js
+
 Docker
+
 PostgreSQL
+
 Nginx
+
 bcrypt
+
 vue router
+
 node mailer
+
 speakeasy
+
 npm
+
 redis(for caching)
+
 vue js
 
-Database Setup
+## Database Setup
 Start PostgreSQL:
 
 Ensure PostgreSQL is running locally
+
 How? In wira-backend, search for db.js and fill in your postgresdb details.
 
 later create the database 
+
 for example: CREATE DATABASE wira_dashboard;
+
 Next, create the tables with the queries.
 for example:
+
 CREATE TABLE Account (
     acc_id SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
@@ -58,18 +72,25 @@ CREATE TABLE Session (
 ## Data generating
 
 go to generatedata.js in wira-backend, make sure the details about your db is filled, then search for the section where there is:
+
     const testUsername = 'Test123'; // Specify the username
+   
     const testEmail = 'youremail@gmail.com'; // Specify the email
+    
     const testPassword = 'abc123'; // Specify the plain-text password
+
 fill in your details for you to later test the log in function.
 
 After that, type node generatedata.js to generate the data, you can switch the number you want to generate by changing the value the for loop goes through. For Instance, if you want 200000 account, then switch the 100000 in the for loop to 200000.
 
 after generating go to the wira-backend directory and run the command:
+
 node index.js
+
 ## Now the backend server is running!
 
 Next, go to the wira-frontend directory and run the command:
+
 npm run dev
 
 ## Now the frontend server is running!
@@ -79,11 +100,15 @@ now hold Control and click the link ( http://localhost:5173/), it should redirec
 ## LOG IN
 
 you can log in to see the wira rankings by using the test account you generated before. 
+
 Log in with the correct email and password, later it will redirect you to a verify2FA section.
+
 Now check the email you registered with, there should be a 6-digit code sent to you.
+
 insert the 2FA input with the 6-digit code.(If it says invalid 2FAcode Eventhough It is correct, please go back and log in again,this is a bug that I didnt get to fix before submitting)
 
 After logging in, you can access to the rankings. Here you can search user by username, and you can sort the class you want to view.
+
 On the bottom of the page should be the pagination section, here you can use the "previous" button to go back one page, "next" button will take you to the next page, and the rest of the page button will lead you to the pages that is on the button.
 
 ## LOG OUT
