@@ -41,7 +41,9 @@
       <!-- Pagination -->
       <div class="pagination-info">
       <!-- Display Current Page and Total Pages -->
+      <div class="page-display">
       <p>Page: {{ currentPage }} / {{ totalPages }}</p>
+      </div>
       <div class="pagination-controls">
         <button @click="goToPreviousPage" :disabled="currentPage === 1">Previous</button>
         <!-- Numbered Pagination -->
@@ -236,6 +238,14 @@ td {
   flex-wrap: wrap;
 }
 
+.page-display {
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
 button {
   padding: clamp(8px, 1.5vw, 12px);
   font-size: clamp(12px, 2vw, 16px);
