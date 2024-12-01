@@ -34,7 +34,7 @@ Start PostgreSQL:
 
 Ensure PostgreSQL is running locally
 
-How? In wira-backend, search for db.js and fill in your postgresdb details.
+How? First go to any apps that could access to postGresDB for example I used PgAdmin4, then create your acc and remember your password.
 
 later create the database 
 
@@ -71,7 +71,9 @@ CREATE TABLE Session (
 
 ## Data generating
 
-go to generatedata.js in wira-backend, make sure the details about your db is filled, then search for the section where there is:
+In wira-backend, search for db.js and fill in your postgresdb details(you only need to change it to your database name and your DB password).
+
+Go to generatedata.js in wira-backend, make sure the details about your db is filled, then search for the section where there is:
 
     const testUsername = 'Test123'; // Specify the username
    
