@@ -159,118 +159,158 @@
   };
   </script>
   <style scoped>
-  /* General styling */
-  .app {
-    font-family: Arial, sans-serif;
-    padding: 16px;
-  }
-  
-  h1 {
-    font-size: clamp(24px, 3vw, 36px); /* Responsive heading size */
-    text-align: center;
-    margin-bottom: 16px;
-  }
-  
-  /* Filter Section */
+/* General styling */
+.app {
+  font-family: Arial, sans-serif;
+  padding: 16px;
+}
+
+h1 {
+  font-size: clamp(24px, 3vw, 36px);
+  text-align: center;
+  margin-bottom: 16px;
+  color: white; 
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+  border-radius: 8px;
+  padding: 16px;
+}
+
+/* Filter Section */
+.filter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+input[type="text"] {
+  width: clamp(200px, 50%, 400px);
+  padding: clamp(8px, 1.5vw, 12px);
+  font-size: clamp(14px, 2vw, 16px);
+  border: 1px solid black;
+  border-radius: 4px;
+  box-sizing: border-box; /* Fix top cut-off issue */
+}
+
+select {
+  font-size: clamp(12px, 2vw, 16px);
+  padding: 8px;
+  width: clamp(150px, 50%, 300px);
+}
+
+/* Table styling */
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  background-color: white; /* Solid background to make it non-transparent */
+}
+
+th {
+  background-color: cornflowerblue;
+  border: 1px solid lightgray;
+  color: white;
+  font-weight: bold;
+  padding: clamp(8px, 2vw, 16px);
+  font-size: clamp(12px, 2vw, 14px);
+}
+
+td {
+  padding: clamp(8px, 2vw, 16px);
+  border: 1px solid lightgray;
+  text-align: left;
+  font-size: clamp(12px, 2vw, 14px);
+}
+/* Pagination */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: clamp(8px, 1.5vw, 12px);
+  font-size: clamp(12px, 2vw, 16px);
+  min-width: 80px; /* Ensure "Previous" fits */
+  background-color: cornflowerblue;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: clamp(40px, 8vw, 80px);
+}
+
+button:hover {
+  background-color: royalblue; /* Hover color */
+}
+
+button.active {
+  background-color: darkblue; /* Active page color */
+  color: white;
+}
+
+button:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+/* Media Queries */
+@media (max-width: 600px) {
   .filter-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 16px;
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    flex-direction: column;
+    align-items: stretch;
   }
-  
+  input,
   select {
-    width: clamp(150px, 50%, 300px); /* Dynamic resizing based on screen size */
-    padding: clamp(8px, 1vw, 12px);
-    font-size: clamp(12px, 1.5vw, 16px);
-    border: 1px solid lightgray;
-    border-radius: 4px;
-    background-color: white;
-    color: black;
-  }
-  
-  input[type="text"] {
-    width: clamp(200px, 50%, 400px); /* Adjust input size */
-    padding: clamp(8px, 1.5vw, 12px);
-    font-size: clamp(14px, 2vw, 16px);
-    border: 1px solid lightgray;
-    border-radius: 4px;
-  }
-  
-  /* Table styling */
-  .table-container {
-    overflow-x: auto; /* Scrollable on smaller screens */
-  }
-  
-  table {
     width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 16px;
   }
-  
-  th {
-    background-color: cornflowerblue; /* Blue header */
-    color: white; /* White text for contrast */
-    font-weight: bold;
-    padding: clamp(8px, 2vw, 16px);
-    font-size: clamp(12px, 2vw, 14px);
+  table {
+    font-size: 12px;
   }
-  
-  tr:nth-child(even) {
-    background-color: aliceblue; /* Subtle blue for even rows */
-  }
-  
-  tr:nth-child(odd) {
-    background-color: white; /* White for odd rows */
-  }
-  
-  tr:hover {
-    background-color: lightsteelblue; /* Light blue-gray on hover */
-  }
-  
-  td {
-    padding: clamp(8px, 2vw, 16px);
-    border: 1px solid lightgray;
-    text-align: left;
-    font-size: clamp(12px, 2vw, 14px);
-  }
-  
   .pagination-controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+    flex-wrap: wrap;
   }
-  
-  button {
-    padding: clamp(8px, 1.5vw, 12px);
-    font-size: clamp(12px, 2vw, 16px);
-    background-color: cornflowerblue;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    width: clamp(40px, 8vw, 80px); /* Responsive width for numbered buttons */
+}
+
+@media (min-width: 600px) and (max-width: 768px) {
+  .filter-container {
+    gap: 12px;
   }
-  
-  button:disabled {
-    background-color: gray;
-    cursor: not-allowed;
+  input,
+  select {
+    font-size: 14px;
   }
-  
-  @media (max-width: 768px) {
-    /* Mobile-specific adjustments */
-    th,
-    td {
-      font-size: clamp(10px, 2vw, 12px);
-    }
-  
-    button {
-      width: 100px; /* Ensure smaller button size */
-    }
+  table {
+    font-size: 14px;
   }
-  </style>
-  
+  .pagination-controls {
+    gap: 10px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+  .filter-container {
+    flex-direction: row;
+    gap: 16px;
+  }
+  table {
+    font-size: 16px;
+  }
+  .pagination-controls button {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 992px) {
+  table {
+    font-size: 18px;
+  }
+}
+</style>

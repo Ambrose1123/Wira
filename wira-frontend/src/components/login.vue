@@ -10,11 +10,14 @@
     </form>
 
     <!-- Step 2: 2FA Verification -->
-    <form v-else @submit.prevent="handle2FAVerification">
-      <p>A 2FA code has been sent to your email. Please enter it below:</p>
-      <input v-model="twoFACode" type="text" placeholder="2FA Code" required />
-      <button type="submit">Verify 2FA</button>
-    </form>
+    <div v-else>
+      <form @submit.prevent="handle2FAVerification">
+        <p>A 2FA code has been sent to your email. Please enter it below:</p>
+        <input v-model="twoFACode" type="text" placeholder="2FA Code" required />
+        <button type="submit">Verify 2FA</button>
+      </form>
+      <button @click="refreshPage" class="back-button">Back</button>
+    </div>
 
     <!-- Error Message -->
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
@@ -49,8 +52,9 @@ export default {
         // If login is successful, show the 2FA input
         this.is2FARequired = true;
       } catch (error) {
-        // Display backend error message or fallback message
-        this.errorMessage = error.response?.data?.error || "An unexpected error occurred.";
+       // Display backend error message
+      this.errorMessage = error.message; // Use the error message from the API function
+      console.error("Login error:", error.message); // Log for debugging
       }
     },
     async handle2FAVerification() {
@@ -71,6 +75,9 @@ export default {
         // Display backend error message or fallback message
         this.errorMessage = error.response?.data?.error || "Invalid 2FA code.";
       }
+    },
+    refreshPage() {
+      location.reload(); // Reload the page
     },
   },
 };
@@ -118,6 +125,23 @@ button {
 
 button:hover {
   background-color: royalblue;
+}
+.back-button {
+  margin-top: 10px;
+  padding: 15px 20px; /* Increase padding for larger size */
+  font-size: 16px; /* Increase font size */
+  background-color: gray;
+  color: white;
+  border: none;
+  border-radius: 6px; /* Make it more rounded */
+  cursor: pointer;
+  display: inline-block;
+  width: 100%; /* Optional: Make it span full width */
+  text-align: center;
+}
+
+.back-button:hover {
+  background-color: darkgray; /* Change hover color */
 }
 
 .error {
