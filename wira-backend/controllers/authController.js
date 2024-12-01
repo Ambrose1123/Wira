@@ -53,7 +53,7 @@ export async function login(req, res) {
     const twoFACode = speakeasy.totp({
       secret: user.secretkey_2fa,
       encoding: "base32",
-      step: 60,
+      step: 90,
     });
 
     await send2FAEmail(user.email, twoFACode);
@@ -92,7 +92,7 @@ export async function verify2FA(req, res) {
       secret: user.secretkey_2fa,
       encoding: "base32",
       token: twoFACode,
-      step: 60,
+      step: 90,
     });
 
     if (!is2FAValid) {
