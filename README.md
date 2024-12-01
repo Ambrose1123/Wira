@@ -28,6 +28,21 @@ npm
 redis(for caching)
 
 vue js
+## Tutorial on Redis
+
+Install redis
+
+How to Run the redis server with Docker ? Type:
+
+docker run --name redis-server -d -p 6379:6379 redis
+
+To test If redis is working:
+
+docker exec -it redis redis-cli
+
+PING
+
+It should Return PONG
 
 ## Database Setup
 Start PostgreSQL:
