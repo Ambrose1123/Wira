@@ -44,14 +44,14 @@ export async function fetchMaxCharId() {
 }
 
 
-export async function login(email, password) {
+export async function login(identifier, password) {
   try {
     const response = await fetch(`${BASE_URL}/api/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ identifier, password }),
     });
 
     if (!response.ok) {

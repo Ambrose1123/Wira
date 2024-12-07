@@ -4,7 +4,9 @@
 
     <!-- Step 1: Login Form -->
     <form v-if="!is2FARequired" @submit.prevent="handleLogin">
-      <input v-model="email" type="email" placeholder="Email" required />
+      <!-- Input field for Username or Email -->
+      <label for="identifier">Username or Email</label>
+      <input v-model="identifier" type="text" id="identifier" placeholder="Enter your username or email" required/>
       <input v-model="password" type="password" placeholder="Password" required />
       <button type="submit">Login</button>
     </form>
@@ -40,17 +42,19 @@ export default {
   methods: {
     async handleLogin() {
       this.errorMessage = ""; // Clear any previous errors
-      if (!this.email || !this.password) {
-        this.errorMessage = "Email and password are required.";
+      if (!this.identifier || !this.password) {
+        this.errorMessage = "Username/Email and password are required.";
         return;
       }
 
       try {
         // Send login request
-        const response = await login(this.email, this.password);
+        const response = await login(this.identifier, this.password);
         console.log(response.message);
         // If login is successful, show the 2FA input
         this.is2FARequired = true;
+        // Store identifier for 2FA verification step
+        this.savedIdentifier = this.identifier;
       } catch (error) {
        // Display backend error message
       this.errorMessage = error.message; // Use the error message from the API function
@@ -66,7 +70,7 @@ export default {
 
       try {
         // Send 2FA verification request
-        const response = await verify2FA(this.email, this.twoFACode);
+        const response = await verify2FA(this.savedIdentifier, this.twoFACode);
         console.log(response.message);
         // Store session ID and redirect to rankings
         localStorage.setItem("sessionId", response.sessionId);

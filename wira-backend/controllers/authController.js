@@ -33,19 +33,21 @@ async function send2FAEmail(email, twoFACode) {
 
 // Login function
 export async function login(req, res) {
-  const { email, password } = req.body;
+  const { identifier, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ error: "Email and password are required" });
+  if (!identifier || !password) {
+    return res.status(400).json({ error: "Username/Email and password are required" });
   }
 
   try {
     // Step 1: Verify email
-    const accountQuery = `SELECT * FROM account WHERE email = $1`;
-    const result = await query(accountQuery, [email]);
+    const accountQuery = `SELECT * FROM account 
+    WHERE email = $1 OR username = $1
+    `;
+    const result = await query(accountQuery, [identifier]);
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: "Email not found" });
+      return res.status(404).json({ error: "Account not found" });
     }
     const user = result.rows[0];
 
@@ -74,26 +76,28 @@ export async function login(req, res) {
 export async function verify2FA(req, res) {
   console.log("Request received at /verify-2fa", req.body);
 
-  const { email, twoFACode } = req.body;
+  const { email: identifier, twoFACode } = req.body;
 
-  if (!email || !twoFACode) {
+  if (!identifier || !twoFACode) {
     console.log("Missing email or 2FA code");
     return res.status(400).json({ error: "Email and 2FA code are required" });
   }
 
   try {
-    const accountQuery = `SELECT * FROM account WHERE email = $1`;
-    console.log("Querying database with email:", email);
-    const result = await query(accountQuery, [email]);
+    // Step 1: Query database for either username or email
+    const accountQuery = `SELECT * FROM account WHERE email = $1 OR username = $1`;
+    console.log("Querying database with identifier:", identifier);
+    const result = await query(accountQuery, [identifier]);
 
     if (result.rows.length === 0) {
-      console.log("Email not found in database");
-      return res.status(404).json({ error: "Invalid email or 2FA code" });
+      console.log("identifier not found in database");
+      return res.status(404).json({ error: "Account not found or 2FA code" });
     }
 
     const user = result.rows[0];
     console.log("User found:", user);
 
+    // Step 2: Verify the 2FA code
     const is2FAValid = speakeasy.totp.verify({
       secret: user.secretkey_2fa,
       encoding: "base32",
@@ -108,12 +112,14 @@ export async function verify2FA(req, res) {
 
     console.log("2FA verified successfully");
 
+    // Step 3: Generate session
     const expiryDatetime = new Date(Date.now() + 3600000);
     const sessionQuery = `INSERT INTO session (session_metadata, expiry_datetime) VALUES ($1, $2) RETURNING session_id`;
     const sessionMetadata = JSON.stringify({ acc_id: user.acc_id, email: user.email });
     const sessionResult = await query(sessionQuery, [sessionMetadata, expiryDatetime]);
     const sessionId = sessionResult.rows[0].session_id;
 
+    console.log("Session ID generated:", sessionId);
     res.json({ sessionId, message: "2FA verification successful" });
   } catch (error) {
     console.error("Error during 2FA verification:", error);

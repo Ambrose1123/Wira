@@ -156,6 +156,39 @@ You can test if your email signed up with aws is working by testing with
 node email.js
 npm install dotenv
 
+1. Set Up AWS Credentials
+Step 1: Access the IAM Console
+Go to the AWS Management Console.
+Search for and open IAM (Identity and Access Management).
+Step 2: Create a New IAM User
+In the IAM Dashboard:
+Click Users > Add User.
+Enter a username (e.g., ses-user).
+Select Programmatic Access (to generate an Access Key and Secret Key).
+Step 3: Attach Permissions
+Attach the policy: AmazonSESFullAccess to the new user.
+This gives the user permission to send emails with SES.
+Click Next and Create User.
+Step 4: Retrieve Access Keys
+Once the user is created, you’ll get:
+Access Key ID (e.g., AKIAIOSFODNN7EXAMPLE)
+Secret Access Key (e.g., wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY)
+Save these securely. You won’t be able to see the Secret Key again.
+2. Set Up Amazon SES
+Step 1: Verify the Sender Email
+Go to the Amazon SES Console in your AWS account:
+Navigate to Verified Identities > Create Identity.
+Select Email Address and enter the email you want to use as the sender (e.g., noreply@yourdomain.com).
+Click Create.
+Step 2: Verify the Email
+Amazon will send a verification email to the specified email address.
+Open the email and click the verification link.
+3. Select Your AWS Region
+Choose a region where SES is available (e.g., us-east-1).
+
+4. Add Credentials to .env File
+Create or update your .env file with the following:
+
 AWS_ACCESS_KEY_ID=YOUR_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY=YOUR_SECRET_ACCESS_KEY
 AWS_REGION=ap-southeast-2
