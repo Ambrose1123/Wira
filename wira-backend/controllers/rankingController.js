@@ -1,5 +1,7 @@
 import { query } from "../db.js";
-import redisClient from "../index.js"; // Import Redis client
+import NodeCache from "node-cache"; //Import node-cache
+
+const cache = new NodeCache({ stdTTL: 3600 }); // Cache expires in 1 hour
 
 export const getRankings = async (req, res) => {
     try {
@@ -9,10 +11,10 @@ export const getRankings = async (req, res) => {
       const cacheKey = `rankings:${search}:${limit}:${offset}:${class_id || "all"}`;
 
       // Check if the data is already cached in Redis
-      const cachedData = await redisClient.get(cacheKey);
+      const cachedData = cache.get(cacheKey);
       if (cachedData) {
       console.log("Serving data from cache");
-      return res.json(JSON.parse(cachedData)); // Serve cached data
+      return res.json(cachedData); // Serve cached data
       }
       // Build the base query(show username all class id and reward score)
       let baseQuery = `
@@ -40,8 +42,9 @@ export const getRankings = async (req, res) => {
   
       const result = await query(baseQuery, queryParams);
 
-      // Cache the results with a 1-hour expiration
-    await redisClient.setEx(cacheKey, 3600, JSON.stringify(result.rows));
+      // Save data to cache
+      cache.set(cacheKey, result.rows);
+
   
     console.log("Serving data from database");  
     res.json(result.rows);
@@ -66,4 +69,3 @@ export const getRankings = async (req, res) => {
       res.status(500).json({ success: false, error: "Failed to fetch max char_id" });
     }
   };
-  

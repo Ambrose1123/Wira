@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
-"scripts": {
-  "test": "echo \"Error: no test specified\" && exit 1",
-  "dev": "node index.js",
-  "start": "node index.js"
-},
-
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node index.js",
+    "start": "node index.js"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -17,6 +16,7 @@
     "cors": "^2.8.5",
     "express": "^4.21.1",
     "faker": "^5.5.3",
+    "node-cache": "^5.1.2",
     "nodemailer": "^6.9.16",
     "pg": "^8.13.1",
     "redis": "^4.7.0",

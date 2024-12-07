@@ -135,3 +135,16 @@ To log out, please go to the Top right corener and look for the log out button. 
 ### If you encounter any issues, feel free to view this video demo to have a better understanding of how this work:
 
 ## LINK: https://drive.google.com/drive/folders/1SjTMVaABp8qZScqpcAbqLGLnUxY2j1Io?usp=sharing
+
+NEW:
+
+1. Using GIN will be faster so:
+
+ CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+CREATE INDEX IF NOT EXISTS idx_username 
+ON account USING gin (username gin_trgm_ops);
+
+Cache: node cache
+
+npm install node-cache
