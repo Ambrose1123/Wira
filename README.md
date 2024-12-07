@@ -148,3 +148,15 @@ ON account USING gin (username gin_trgm_ops);
 Cache: node cache
 
 npm install node-cache
+
+npm install aws-sdk
+npm install @aws-sdk/client-ses
+
+You can test if your email signed up with aws is working by testing with 
+node email.js
+npm install dotenv
+
+AWS_ACCESS_KEY_ID=YOUR_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY=YOUR_SECRET_ACCESS_KEY
+AWS_REGION=ap-southeast-2
+SENDER_EMAIL=your-verified-email@example.com

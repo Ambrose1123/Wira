@@ -1,27 +1,33 @@
 import bcrypt from "bcrypt";
 import speakeasy from "speakeasy";
-import nodemailer from "nodemailer";
+import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import { query } from "../db.js"; // Import database query function
+import dotenv from "dotenv";
 
-// Email transport configuration
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "likai.phong@gmail.com", // Your email
-    pass: "irxt tdvb ymav isqa", // Your app password
+dotenv.config();
+// Configure AWS SES
+const sesClient = new SESClient({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   },
 });
 
-// Helper function to send 2FA email
+
+// Helper function to send 2FA email via Amazon SES
 async function send2FAEmail(email, twoFACode) {
-  const mailOptions = {
-    from: "ambrosetest1123@gmail.com", // Your email
-    to: email,
-    subject: "Your 2FA Code",
-    text: `Your 2FA code is: ${twoFACode}. It is valid for 1 minute.`,
+  const params = {
+    Source: process.env.SENDER_EMAIL, // Your verified email in Amazon SES
+    Destination: { ToAddresses: [email] },
+    Message: {
+      Subject: { Data: "Your 2FA Code" },
+      Body: { Text: { Data: `Your 2FA code is: ${twoFACode}. It is valid for 2 minutess.` } },
+    },
   };
 
-  await transporter.sendMail(mailOptions);
+  const command = new SendEmailCommand(params);
+  await sesClient.send(command);
   console.log(`2FA code sent to: ${email}`);
 }
 
@@ -53,7 +59,7 @@ export async function login(req, res) {
     const twoFACode = speakeasy.totp({
       secret: user.secretkey_2fa,
       encoding: "base32",
-      step: 90,
+      step: 120,
     });
 
     await send2FAEmail(user.email, twoFACode);
@@ -92,7 +98,7 @@ export async function verify2FA(req, res) {
       secret: user.secretkey_2fa,
       encoding: "base32",
       token: twoFACode,
-      step: 90,
+      step: 120,
     });
 
     if (!is2FAValid) {
