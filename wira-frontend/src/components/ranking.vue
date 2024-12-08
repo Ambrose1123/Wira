@@ -17,7 +17,9 @@
         <option v-for="id in classIds" :key="id" :value="id">Class {{ id }}</option>
       </select>
     </div>
-  
+    <div v-if="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
       <!-- Rankings Table -->
       <table>
         <thead>
@@ -80,6 +82,7 @@
         rankings: [],
         searchTerm: "",
         selectedClass: "",
+        errorMessage: "",
         targetPage: "", // To store the user input for a specific page
         currentPage: 1,
         totalPages: 80,
@@ -116,6 +119,7 @@
       console.log("Total Pages:", this.totalPages); // Debugging log
         } catch (error) {
           console.error("Failed to fetch maxCharId:", error);
+          this.errorMessage = error.message;
         }
       },
       async fetchRankings() {
@@ -126,6 +130,7 @@
           this.rankings = await fetchRankings(this.searchTerm, this.limit, offset, this.selectedClass);
         } catch (error) {
           console.error("Error fetching rankings:", error);
+          this.errorMessage = error.message;
         }
       },
       goToPage(page) {
@@ -175,6 +180,16 @@ h1 {
   background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
   border-radius: 8px;
   padding: 16px;
+}
+.error-message {
+  color: red;
+  background-color: #ffe0e0;
+  padding: 10px;
+  border: 1px solid #ff6b6b;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-align: center;
 }
 
 /* Filter Section */

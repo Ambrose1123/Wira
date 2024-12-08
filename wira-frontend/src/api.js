@@ -1,9 +1,17 @@
 const BASE_URL = "http://localhost:3000";
 
+// Helper function to get sessionId as an integer
+function getSessionId() {
+  const sessionId = localStorage.getItem("sessionId");
+  return sessionId ? parseInt(sessionId, 10) : null; // Convert to integer
+}
+
 // Updated fetchRankings with sessionId header
 export async function fetchRankings(search = "", limit = 10, offset = 0, classId = "") {
   const classFilter = classId ? `&class_id=${classId}` : "";
-  const sessionId = localStorage.getItem("sessionId"); // Retrieve sessionId
+  const sessionId = getSessionId();// Retrieve sessionId
+  if (!sessionId) throw new Error("No session ID found. Please log in again.");
+
   try {
     const response = await fetch(
       `${BASE_URL}/api/ranking?search=${search}&limit=${limit}&offset=${offset}${classFilter}`,
@@ -14,7 +22,8 @@ export async function fetchRankings(search = "", limit = 10, offset = 0, classId
       }
     );
     if (!response.ok) {
-      throw new Error(`API Error: ${response.statusText}`);
+      const errorData = await response.json(); // Parse backend error response
+      throw new Error(errorData.error || `API Error: ${response.statusText}`);
     }
     return await response.json();
   } catch (error) {
@@ -25,7 +34,7 @@ export async function fetchRankings(search = "", limit = 10, offset = 0, classId
 
 // Updated fetchMaxCharId with sessionId header
 export async function fetchMaxCharId() {
-  const sessionId = localStorage.getItem("sessionId"); // Retrieve sessionId
+  const sessionId = getSessionId(); // Retrieve sessionId
   try {
     const response = await fetch(`${BASE_URL}/api/max-char-id`, {
       headers: {
@@ -33,7 +42,8 @@ export async function fetchMaxCharId() {
       },
     });
     if (!response.ok) {
-      throw new Error(`API Error: ${response.statusText}`);
+      const errorData = await response.json(); // Parse backend error response
+      throw new Error(errorData.error || `API Error: ${response.statusText}`);
     }
     const data = await response.json();
     return data.maxCharId; // Return the maxCharId value
@@ -89,7 +99,7 @@ export async function verify2FA(email, twoFACode) {
   }
 }
 export async function logout() {
-  const sessionId = localStorage.getItem("sessionId");
+  const sessionId = getSessionId();
 
   if (!sessionId) {
     console.error("No session ID found in localStorage.");

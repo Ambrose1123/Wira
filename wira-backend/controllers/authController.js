@@ -114,8 +114,8 @@ export async function verify2FA(req, res) {
 
     // Step 3: Generate session
     const expiryDatetime = new Date(Date.now() + 3600000);
+    const sessionMetadata = JSON.stringify({ acc_id: user.acc_id, email: user.email }); 
     const sessionQuery = `INSERT INTO session (session_metadata, expiry_datetime) VALUES ($1, $2) RETURNING session_id`;
-    const sessionMetadata = JSON.stringify({ acc_id: user.acc_id, email: user.email });
     const sessionResult = await query(sessionQuery, [sessionMetadata, expiryDatetime]);
     const sessionId = sessionResult.rows[0].session_id;
 
