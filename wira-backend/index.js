@@ -10,6 +10,17 @@ const port = 3000;
 app.use(cors({ origin: '*' })); // Allow all origins
 app.use(express.json()); // Enable JSON parsing
 
+// Run session cleanup immediately on server start
+(async () => {
+  try {
+    console.log("Running initial session cleanup...");
+    await sessionCleanup();
+    console.log("Initial session cleanup completed successfully.");
+  } catch (error) {
+    console.error("Error during initial session cleanup:", error.message);
+  }
+})();
+
 setInterval(() => {
   sessionCleanup();
 }, 10 * 60 * 1000); // 10 minutes in milliseconds
