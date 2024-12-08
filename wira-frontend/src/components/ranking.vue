@@ -2,21 +2,20 @@
     <div>
       <h1>WIRA Ranking</h1>
   
-     <!-- Search and Class Filter -->
-     <div class="filter-container">
+     <!-- Search Input and Class Filter -->
+    <div class="filter-container">
       <input
         type="text"
         v-model="searchTerm"
-        @input="fetchRankings"
+        @keyup.enter="redirectToSearchResults"
         placeholder="Search by username"
       />
-      
-      <!-- Class Filter -->
-      <select v-model="selectedClass" @change="fetchRankings">
+      <select v-model="selectedClass" @change="redirectToSearchResults">
         <option value="">All Classes</option>
         <option v-for="id in classIds" :key="id" :value="id">Class {{ id }}</option>
       </select>
     </div>
+
     <div v-if="errorMessage" class="error-message">
       {{ errorMessage }}
     </div>
@@ -41,41 +40,47 @@
       </table>
   
       <!-- Pagination -->
-      <div class="pagination-info">
+    <div class="pagination-info">
       <!-- Display Current Page and Total Pages -->
       <div class="page-display">
-      <p>Page: {{ currentPage }} / {{ totalPages }}</p>
+        <p>Page: {{ currentPage }} / {{ totalPages }}</p>
       </div>
       <div class="pagination-controls">
-        <button @click="goToPreviousPage" :disabled="currentPage === 1">Previous</button>
+        <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1">
+          Previous
+        </button>
+
         <!-- Numbered Pagination -->
         <button
           v-for="page in visiblePages"
           :key="page"
           :class="{ active: currentPage === page }"
-          @click="goToPage(page)"
+          @click="changePage(page)"
         >
           {{ page }}
         </button>
-        <button @click="goToNextPage" :disabled="currentPage === totalPages">Next</button>
+
+        <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages">
+          Next
+        </button>
+
+        <!-- Go to Specific Page -->
         <input
-        type="number"
-        v-model.number="targetPage"
-        @keypress.enter="goToSpecificPage"
-        placeholder="Page"
-        min="1"
-        :max="totalPages"
-      />
-      <button @click="goToSpecificPage">Go</button>
+          type="number"
+          v-model.number="targetPage"
+          @keypress.enter="changePage(targetPage)"
+          placeholder="Page"
+          min="1"
+          :max="totalPages"
+        />
+        <button @click="changePage(targetPage)">Go</button>
       </div>
     </div>
     </div>
   </template>
   
   <script>
-  import { fetchRankings } from "@/api"; // Import the API function
-  import { fetchMaxCharId } from "@/api"; // Import the API function
-  
+  import { fetchRankings } from "@/api"; // Import the API function  
   export default {
     data() {
       return {
@@ -85,7 +90,7 @@
         errorMessage: "",
         targetPage: "", // To store the user input for a specific page
         currentPage: 1,
-        totalPages: 80,
+        totalPages: 80000,
         visiblePages: [], // Pages to display in numbered pagination
         limit: 10,
         classIds: [1, 2, 3, 4, 5, 6, 7, 8],
@@ -110,58 +115,50 @@
       },
     },
     methods: {
-      async fetchMaxCharId() {
-        console.log("fetchMaxCharId is being called");
-        try {
-          const maxCharId = await fetchMaxCharId(); // Call the API
-      console.log("Max Char ID:", maxCharId); // Debugging log
-      this.totalPages = Math.ceil(maxCharId / this.limit); // Calculate total pages
-      console.log("Total Pages:", this.totalPages); // Debugging log
-        } catch (error) {
-          console.error("Failed to fetch maxCharId:", error);
-          this.errorMessage = error.message;
-        }
-      },
+      // Fetch default rankings without query parameters
       async fetchRankings() {
         console.log("fetchRankings is being called");
         const offset = (this.currentPage - 1) * this.limit;
         try {
-          // Use the API function
-          this.rankings = await fetchRankings(this.searchTerm, this.limit, offset, this.selectedClass);
-        } catch (error) {
+        // Call the API function
+        const data = await fetchRankings(this.searchTerm, this.limit, offset, this.selectedClass);
+        // Extract results and total from the API response
+        this.rankings = data.results; // Only the array of ranking data
+        this.totalPages = Math.ceil(data.total / this.limit); // Calculate total pages
+        }
+        catch (error) {
           console.error("Error fetching rankings:", error);
           this.errorMessage = error.message;
         }
       },
-      goToPage(page) {
-        if (page >= 1 && page <= this.totalPages) {
-          this.currentPage = page;
-          this.fetchRankings(); // Add your fetch logic here
-        }
-      },
-      goToNextPage() {
-        this.currentPage++;
-        this.fetchRankings();
-      },
-      goToPreviousPage() {
-        if (this.currentPage > 1) {
-          this.currentPage--;
-          this.fetchRankings();
-        }
-      },
-      goToSpecificPage() {
-        if (this.targetPage >= 1 && this.targetPage <= this.totalPages) {
-          this.currentPage = this.targetPage;
-          this.fetchRankings();
-        } else {
-          alert("Invalid page number.");
-        }
-      },
+
+      // Redirect to the search results page
+    redirectToSearchResults() {
+      this.$router.push({
+        name: "SearchResults",
+        query: {
+          search: this.searchTerm,
+          class_id: this.selectedClass,
+          page: 1, // Always start at page 1 for a new search
+        },
+      });
+    },
+    changePage(newPage) {
+      if (!newPage || newPage < 1 || newPage > this.totalPages) return;
+      this.$router.push({
+        name: "SearchResults",
+        query: {
+          search: this.searchTerm,
+          class_id: this.selectedClass,
+          page: newPage,
+        },
+      });
+    },
     },
     mounted() {
-      console.log("ranking.vue mounted");
-      this.fetchMaxCharId(); // Fetch maxCharId on load
-      this.fetchRankings();
+      console.log("Fetching default rankings...");
+    // Fetch default rankings on page load
+    this.fetchRankings();
     },
   };
   </script>

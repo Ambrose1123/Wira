@@ -42,14 +42,30 @@ export const getRankings = async (req, res) => {
   
       const result = await query(baseQuery, queryParams);
 
-      // Save data to cache
-      cache.set(cacheKey, result.rows);
+      // Query to get total count
+    const countQuery = `
+    SELECT COUNT(*) AS total
+    FROM scores
+    JOIN character ON scores.char_id = character.char_id
+    JOIN account ON character.acc_id = account.acc_id
+    WHERE account.username ILIKE $1
+    ${class_id ? "AND character.class_id = $2" : ""}
+  `;
+  const countResult = await query(countQuery, queryParams.slice(0, queryParams.length - 2));
 
+  // Combine results and total count
+  const responseData = {
+    results: result.rows,
+    total: parseInt(countResult.rows[0].total, 10),
+  };
+
+  // Save to cache
+  cache.set(cacheKey, responseData);
   
     console.log("Serving data from database");  
-    res.json(result.rows);
+    res.json(responseData);
     } catch (error) {
-      console.error(error);
+      console.error("Error in getRankings:", error);
       res.status(500).json({ success: false, error: "Server Error" });
     }
   };

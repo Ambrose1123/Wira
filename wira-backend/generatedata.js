@@ -118,6 +118,14 @@ async function generateData() {
 
     console.log('Scores generated and inserted.');
 
+    // Add GIN Index for username search
+    console.log('Creating GIN index on account.username...');
+    await client.query(`
+      CREATE EXTENSION IF NOT EXISTS pg_trgm;
+      CREATE INDEX IF NOT EXISTS idx_username_gin ON account USING gin (username gin_trgm_ops);
+    `);
+    console.log('GIN index created successfully.');
+    
     await client.end();  // Close the connection
   } catch (error) {
     console.error('Error generating data:', error);
