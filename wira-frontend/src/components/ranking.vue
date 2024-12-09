@@ -10,34 +10,63 @@
         @keyup.enter="redirectToSearchResults"
         placeholder="Search by username"
       />
+              <!-- Clickable Search Icon -->
+    <button @click="fetchResults" class="search-icon-button">
+    <i class="fas fa-search search-icon"></i>
+    </button>
       <select v-model="selectedClass" @change="redirectToSearchResults">
         <option value="">All Classes</option>
         <option v-for="id in classIds" :key="id" :value="id">Class {{ id }}</option>
       </select>
     </div>
 
-    <div v-if="errorMessage" class="error-message">
-      {{ errorMessage }}
-    </div>
-      <!-- Rankings Table -->
-      <table>
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Username</th>
-            <th>Class</th>
-            <th>Reward Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(ranking, index) in rankings" :key="index">
-            <td>{{ index + 1 + (currentPage - 1) * limit }}</td>
-            <td>{{ ranking.username }}</td>
-            <td>{{ ranking.class_id }}</td>
-            <td>{{ ranking.reward_score }}</td>
-          </tr>
-        </tbody>
-      </table>
+   <!-- Loading State -->
+   <div v-if="isLoading" class="loading">Loading...</div>
+      <div v-if="errorMessage" class="error-message">
+        <p>{{ errorMessage }}</p>
+        <button v-if="errorMessage.includes('expired')" @click="redirectToLogin">
+        Redirect to log in page
+        </button>
+        </div>
+      <!-- Loading Mask -->
+      <table v-if="isLoading" class="skeleton-table">
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Username</th>
+      <th>Class</th>
+      <th>Reward Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="n in 10" :key="n">
+      <td><div class="skeleton-mask"></div></td>
+      <td><div class="skeleton-mask"></div></td>
+      <td><div class="skeleton-mask"></div></td>
+      <td><div class="skeleton-mask"></div></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Results Table -->
+<table v-else>
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Username</th>
+      <th>Class</th>
+      <th>Reward Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="(ranking, index) in rankings" :key="index">
+      <td>{{ index + 1 + (currentPage - 1) * limit }}</td>
+      <td>{{ ranking.username }}</td>
+      <td>{{ ranking.class_id }}</td>
+      <td>{{ ranking.reward_score }}</td>
+    </tr>
+  </tbody>
+</table>
   
       <!-- Pagination -->
     <div class="pagination-info">
@@ -163,6 +192,45 @@
   };
   </script>
   <style scoped>
+    .loading {
+  text-align: center;
+  font-size: 36px;
+  font-weight: bold;
+  color: whitesmoke;
+  margin-top: 20px;
+}
+/* Skeleton Table Styles */
+.skeleton-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #f8f8f8;
+}
+
+.skeleton-table th,
+.skeleton-table td {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  text-align: left;
+}
+
+.skeleton-mask {
+  height: 16px;
+  background: linear-gradient(90deg, #eeeeee, #dddddd, #eeeeee);
+  background-size: 200% 100%;
+  animation: loadingAnimation 1.5s infinite;
+  border-radius: 4px;
+}
+
+/* Skeleton Animation */
+@keyframes loadingAnimation {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
 /* General styling */
 .app {
   font-family: Arial, sans-serif;
@@ -174,8 +242,6 @@ h1 {
   text-align: center;
   margin-bottom: 16px;
   color: white; 
-  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
-  border-radius: 8px;
   padding: 16px;
 }
 .error-message {
@@ -218,19 +284,38 @@ select {
 .table-container {
   overflow-x: auto;
 }
+.search-icon-button {
+  padding: 10px 12px;
+  background-color: #474747; /* Darker gray for the button */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.search-icon-button:hover {
+  background-color: #5a5a5a; /* Slightly lighter on hover */
+}
 
 table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 16px;
-  background-color: white; /* Solid background to make it non-transparent */
+  background-color: #2E2E2E; /* Light dark grey */
+  color: #E0E0E0; /* Light text for contrast */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8); /* Subtle shadow */
+
 }
 
 th {
-  background-color: cornflowerblue;
+  background-color: rgb(71, 9, 142);
   border: 1px solid lightgray;
   color: white;
   font-weight: bold;
+  text-align: left;
+  text-transform: uppercase; /* Converts all text to uppercase */
   padding: clamp(8px, 2vw, 16px);
   font-size: clamp(12px, 2vw, 14px);
 }
@@ -240,6 +325,21 @@ td {
   border: 1px solid lightgray;
   text-align: left;
   font-size: clamp(12px, 2vw, 14px);
+}
+/* Target the first column (Rank) */
+table th:first-child, table td:first-child {
+  width: 50px; /* Set a specific width */
+  min-width: 50px; /* Ensure it doesn't grow beyond this */
+  text-align: center; /* Align text to the center */
+  transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out; /* Smooth transition */
+}
+thead th:hover {
+  background-color: #7227B0; /* Slightly lighter navy blue */
+  cursor: pointer;
+}
+tbody tr:hover {
+  background-color: #4B3E57; 
+  cursor: pointer;
 }
 /* Pagination */
 .pagination-controls {
@@ -262,20 +362,23 @@ button {
   padding: clamp(8px, 1.5vw, 12px);
   font-size: clamp(12px, 2vw, 16px);
   min-width: 80px; /* Ensure "Previous" fits */
-  background-color: cornflowerblue;
+  background-color: #0A0A5E;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   width: clamp(40px, 8vw, 80px);
+  transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out; /* Smooth transition */
 }
 
 button:hover {
-  background-color: royalblue; /* Hover color */
+  background-color: #003366; /* Slightly lighter navy blue for hover effect */
+  transform: scale(1.05); /* Slight zoom effect on hover */
+
 }
 
 button.active {
-  background-color: darkblue; /* Active page color */
+  background-color: #004080; /* Active page color */
   color: white;
 }
 

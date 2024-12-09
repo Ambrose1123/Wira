@@ -55,8 +55,24 @@ export default {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative; /* Needed for the overlay */
   background: url('./images/background.jpg') no-repeat center center fixed;
   background-size: cover;
+}
+.app::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Black overlay with 50% opacity */
+  z-index: 0; /* Place behind content */
+}
+
+.app > * {
+  position: relative; /* Ensure content is above the overlay */
+  z-index: 1;
 }
 /* Header Styling */
 .app-header {
@@ -65,9 +81,9 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 16px 32px;
-  background-color: cornflowerblue;
+  background-color: #0A0A5E;
   color: white;
-  width: 97.5vw;
+  width: 100vw;
   box-sizing: border-box;
 }
 
@@ -98,7 +114,7 @@ export default {
 }
 
 .logout-button:hover {
-  background-color: lightblue;
+  background-color: #3A5A9C;
   color: white;
 }
 

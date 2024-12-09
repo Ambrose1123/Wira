@@ -10,12 +10,15 @@
           @keyup.enter="redirectToSearch"
           placeholder="Search by username"
         />
+        <!-- Clickable Search Icon -->
+    <button @click="fetchResults" class="search-icon-button">
+    <i class="fas fa-search search-icon"></i>
+    </button>
         <select v-model="selectedClass" @change="redirectToSearch">
           <option value="">All Classes</option>
           <option v-for="id in classIds" :key="id" :value="id">Class {{ id }}</option>
         </select>
       </div>
-  
       <!-- Loading State -->
       <div v-if="isLoading" class="loading">Loading...</div>
       <div v-if="errorMessage" class="error-message">
@@ -65,8 +68,6 @@
     </tr>
   </tbody>
 </table>
-
-  
       <!-- Pagination -->
       <div class="pagination-info" v-if="totalPages > 1">
         <!-- Page Display -->
@@ -157,8 +158,9 @@
             this.searchTerm,this.limit,offset,this.selectedClass
             );
             // Handle empty results due to an invalid page number
-            if (data.results.length === 0 && this.currentPage > 1) {
+            if (data.results.length === 0) {
                 console.warn("No results found. Redirecting to page 1...");
+                alert("No results found. Please insert a valid username!");
       this.$router.push({
         name: "SearchResults",
         query: {
@@ -174,6 +176,7 @@
             // If currentPage exceeds the totalPages, reset to the first page
             if (this.currentPage > this.totalPages) {
                 console.warn("Page exceeds available data. Redirecting to page 1...");
+                alert("Page exceeds available data. Redirecting to page 1...");
       this.$router.push({
         name: "SearchResults",
         query: {
@@ -249,11 +252,6 @@
   </script>
   
   <style scoped>
-  .filter-container {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
   .loading {
   text-align: center;
   font-size: 36px;
@@ -300,7 +298,7 @@
 .error-message button {
   margin-top: 10px;
   padding: 8px 12px;
-  background-color: cornflowerblue;
+  background-color: #3A5A9C;
   color: white;
   border: none;
   border-radius: 4px;
@@ -318,8 +316,6 @@ h1 {
   text-align: center;
   margin-bottom: 16px;
   color: white; 
-  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
-  border-radius: 8px;
   padding: 16px;
 }
 .error-message {
@@ -362,21 +358,40 @@ select {
 .table-container {
   overflow-x: auto;
 }
+.search-icon-button {
+  padding: 10px 12px;
+  background-color: #474747; /* Darker gray for the button */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.search-icon-button:hover {
+  background-color: #5a5a5a; /* Slightly lighter on hover */
+}
 
 table {
   width: 100%;
-  border-collapse: collapse;
   margin-bottom: 16px;
-  background-color: white; /* Solid background to make it non-transparent */
+  background-color: #2E2E2E; /* Light dark grey */
+  color: #E0E0E0; /* Light text for contrast */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8); /* Subtle shadow */
+  border-collapse: collapse;
 }
 
 th {
-  background-color: cornflowerblue;
+  background-color: rgb(71, 9, 142);
   border: 1px solid lightgray;
   color: white;
   font-weight: bold;
+  text-align: left;
+  text-transform: uppercase; /* Converts all text to uppercase */
   padding: clamp(8px, 2vw, 16px);
   font-size: clamp(12px, 2vw, 14px);
+  transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out; /* Smooth transition */
 }
 
 td {
@@ -384,6 +399,20 @@ td {
   border: 1px solid lightgray;
   text-align: left;
   font-size: clamp(12px, 2vw, 14px);
+}
+/* Target the first column (Rank) */
+table th:first-child, table td:first-child {
+  width: 50px; /* Set a specific width */
+  min-width: 50px; /* Ensure it doesn't grow beyond this */
+  text-align: center; /* Align text to the center */
+}
+thead th:hover {
+  background-color: #7227B0; /* Slightly lighter navy blue */
+  cursor: pointer;
+}
+tbody tr:hover {
+  background-color: #4B3E57; /* Slightly lighter navy blue */
+  cursor: pointer;
 }
 /* Pagination */
 .pagination-controls {
@@ -406,20 +435,23 @@ button {
   padding: clamp(8px, 1.5vw, 12px);
   font-size: clamp(12px, 2vw, 16px);
   min-width: 80px; /* Ensure "Previous" fits */
-  background-color: cornflowerblue;
+  background-color: #0A0A5E;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   width: clamp(40px, 8vw, 80px);
+  transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out; /* Smooth transition */
 }
 
 button:hover {
-  background-color: royalblue; /* Hover color */
+  background-color: #003366; /* Slightly lighter navy blue for hover effect */
+  transform: scale(1.05); /* Slight zoom effect on hover */
+
 }
 
 button.active {
-  background-color: darkblue; /* Active page color */
+  background-color: #004080; /* Active page color */
   color: white;
 }
 

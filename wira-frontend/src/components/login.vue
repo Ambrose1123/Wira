@@ -5,7 +5,6 @@
     <!-- Step 1: Login Form -->
     <form v-if="!is2FARequired" @submit.prevent="handleLogin">
       <!-- Input field for Username or Email -->
-      <label for="identifier">Username or Email</label>
       <input v-model="identifier" type="text" id="identifier" placeholder="Enter your username or email" required/>
       <input v-model="password" type="password" placeholder="Password" required />
       <button type="submit">Login</button>
@@ -108,6 +107,7 @@ form {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  color: black;
 }
 
 input {
@@ -119,7 +119,7 @@ input {
 
 button {
   padding: 10px;
-  background-color: cornflowerblue;
+  background-color:#3A5A9C;
   color: white;
   border: none;
   border-radius: 4px;

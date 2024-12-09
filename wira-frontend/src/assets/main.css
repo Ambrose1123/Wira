@@ -1,0 +1,10 @@
+/* src/assets/main.css */
+@import url('https://fonts.googleapis.com/css?family=Rubik:300,400,500');
+
+body {
+  background: #15151E; /* Black theme background */
+  color: #fff;
+  font-family: 'Rubik', sans-serif;
+  margin: 0;
+  padding: 0;
+}
