@@ -69,41 +69,47 @@
 </table>
   
       <!-- Pagination -->
-    <div class="pagination-info">
-      <!-- Display Current Page and Total Pages -->
+      <div class="pagination-info" v-if="totalPages > 1">
+        <!-- Page Display -->
       <div class="page-display">
         <p>Page: {{ currentPage }} / {{ totalPages }}</p>
       </div>
-      <div class="pagination-controls">
-        <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1">
-          Previous
-        </button>
 
-        <!-- Numbered Pagination -->
-        <button
-          v-for="page in visiblePages"
-          :key="page"
-          :class="{ active: currentPage === page }"
-          @click="changePage(page)"
+            <div class="pagination-controls">
+            <!-- Previous Button -->
+            <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1"class="pagination-btn prev-next">Previous</button>
+            
+            <!-- Page Number Buttons -->
+            <div class="page-numbers">
+            <button v-for="page in visiblePages"
+            :key="page"
+            :class="['pagination-btn', { active: currentPage === page }]"
+            @click="changePage(page)"
+            >
+            {{ page }}
+            </button>
+            </div>
+         <!-- Next Button -->
+        <button 
+        @click="changePage(currentPage + 1)" 
+        :disabled="currentPage === totalPages"
+        class="pagination-btn prev-next"
         >
-          {{ page }}
+        Next
         </button>
-
-        <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages">
-          Next
-        </button>
-
+        </div>
         <!-- Go to Specific Page -->
-        <input
-          type="number"
-          v-model.number="targetPage"
-          @keypress.enter="changePage(targetPage)"
-          placeholder="Page"
-          min="1"
-          :max="totalPages"
+        <div class="goto-page">
+        <input 
+        type="number" 
+        v-model.number="targetPage" 
+        min="1" 
+        :max="totalPages" 
+         placeholder="Page"
+        @keypress.enter="goToSpecificPage"
         />
-        <button @click="changePage(targetPage)">Go</button>
-      </div>
+        <button @click="goToSpecificPage" class="pagination-btn go-btn">Go</button>
+        </div>
     </div>
     </div>
   </template>
@@ -341,13 +347,13 @@ tbody tr:hover {
   background-color: #4B3E57; 
   cursor: pointer;
 }
-/* Pagination */
+/* Pagination Controls Styling */
 .pagination-controls {
   display: flex;
-  justify-content: center;
+  justify-content: space-between; /* Align "Previous" and "Next" to edges */
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 10px;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
 .page-display {
@@ -358,33 +364,69 @@ tbody tr:hover {
   gap: 8px;
   flex-wrap: wrap;
 }
-button {
-  padding: clamp(8px, 1.5vw, 12px);
-  font-size: clamp(12px, 2vw, 16px);
-  min-width: 80px; /* Ensure "Previous" fits */
-  background-color: #0A0A5E;
+.page-numbers {
+  display: flex;
+  flex-wrap: wrap; /* Page numbers wrap neatly on small screens */
+  justify-content: center;
+  gap: 5px;
+}
+
+.pagination-btn {
+  padding: 12px 20px;
+  font-size: 14px;
+  background-color: #0A0A5E; /* Navy blue */
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  width: clamp(40px, 8vw, 80px);
-  transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out; /* Smooth transition */
+  transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out;
 }
 
-button:hover {
-  background-color: #003366; /* Slightly lighter navy blue for hover effect */
-  transform: scale(1.05); /* Slight zoom effect on hover */
-
+.pagination-btn:hover {
+  background-color: #003366;
+  transform: scale(1.05); /* Slight zoom effect */
 }
 
-button.active {
-  background-color: #004080; /* Active page color */
+.pagination-btn.active {
+  background-color: #004080;
   color: white;
 }
-
-button:disabled {
+.pagination-btn:disabled {
   background-color: gray;
   cursor: not-allowed;
+}
+.pagination-btn.prev-next {
+  min-width: 80px; /* Fixed size for Previous/Next */
+}
+
+.goto-page {
+  margin-top: 10px;
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+
+.goto-page input {
+  width: 60px;
+  padding: 6px;
+  font-size: 14px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.goto-page button {
+  background-color: #004080;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.goto-page button:hover {
+  background-color: #003366;
+  transform: scale(1.05);
 }
 /* Media Queries */
 @media (max-width: 600px) {
@@ -400,7 +442,44 @@ button:disabled {
     font-size: 12px;
   }
   .pagination-controls {
-    flex-wrap: wrap;
+    flex-wrap: nowrap; /* Prevent wrapping */
+    justify-content: space-between; /* Align Previous/Next to edges */
+    gap: 4px; /* Smaller gap */
+  }
+
+  .page-numbers {
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap; /* Keep page numbers in a row */
+    gap: 4px;
+  }
+
+  .pagination-btn {
+    padding: 6px 8px; /* Smaller buttons */
+    font-size: 12px; /* Smaller font */
+    min-width: 25px; /* Reduce button width */
+  }
+
+    .pagination-btn.prev-next {
+    flex: 1; /* Allow Previous/Next to take available space evenly */
+    font-size: 10px; /* Smaller font */
+    min-width: 25px;
+  }
+
+  .goto-page {
+    margin-top: 8px;
+    justify-content: center;
+  }
+
+  .goto-page input {
+    width: 50px; /* Smaller input */
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  .goto-page button {
+    font-size: 12px;
+    padding: 4px 8px;
   }
 }
 
@@ -416,7 +495,24 @@ button:disabled {
     font-size: 14px;
   }
   .pagination-controls {
+    flex-wrap: nowrap; /* Prevent wrapping */
+    align-items: center;
     gap: 10px;
+  }
+
+  .page-numbers {
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .pagination-btn {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+
+  .goto-page input {
+    width: 50px;
+    font-size: 12px;
   }
 }
 
