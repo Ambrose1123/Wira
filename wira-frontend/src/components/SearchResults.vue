@@ -153,12 +153,24 @@
         this.rankings = []; // Clear the current table data immediately
         try {
             const offset = (this.currentPage - 1) * this.limit;
+            // Validate currentPage and classId
+            if (!Number.isInteger(this.currentPage) || this.currentPage < 1) {
+            alert("Invalid page number. Redirecting to the ranking page.");
+            this.$router.push("/ranking");
+            return; // Stop further execution
+            }       
+
+            if (this.selectedClass && (!Number.isInteger(Number(this.selectedClass)) || Number(this.selectedClass) < 1)) {
+            alert("Invalid class ID. Redirecting to the ranking page.");
+            this.$router.push("/ranking");
+            return; // Stop further execution
+            }
             // Call the API function
             const data = await fetchRankings(
             this.searchTerm,this.limit,offset,this.selectedClass
             );
             // Handle empty results due to an invalid page number
-            if (data.results.length === 0) {
+            if (data.results.length === 0 && this.currentPage < this.totalPages) {
                 console.warn("No results found. Redirecting to page 1...");
                 alert("No results found. Please insert a valid username!");
       this.$router.push({

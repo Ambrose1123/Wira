@@ -15,6 +15,6 @@ router.get("/ranking", validateSession, getRankings);
 
 router.post("/verify-2fa", verify2FA);
 // Route for fetching max char_id (protected)
-router.get("/max-char-id", validateSession, getMaxCharId);
+// router.get("/max-char-id", validateSession, getMaxCharId);
 
 export default router;

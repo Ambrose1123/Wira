@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "http://3.25.163.158:3000";
 
 // Helper function to get sessionId as an integer
 function getSessionId() {
@@ -33,7 +33,8 @@ export async function fetchRankings(search = "", limit = 10, offset = 0, classId
 }
 
 // Updated fetchMaxCharId with sessionId header
-export async function fetchMaxCharId() {
+//Not needed anymore
+/* export async function fetchMaxCharId() { 
   const sessionId = getSessionId(); // Retrieve sessionId
   try {
     const response = await fetch(`${BASE_URL}/api/max-char-id`, {
@@ -52,7 +53,7 @@ export async function fetchMaxCharId() {
     throw error;
   }
 }
-
+*/
 
 export async function login(identifier, password) {
   try {
