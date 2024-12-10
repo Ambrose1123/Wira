@@ -12,7 +12,7 @@
       @keyup.enter="redirectToSearch"
       placeholder="Search by username"
     />
-    <button @click="fetchResults" class="search-icon-button">
+    <button @click="redirectToSearch" class="search-icon-button">
       <i class="fas fa-search search-icon"></i>
     </button>
     </div>
@@ -28,7 +28,7 @@
       <div v-if="isLoading" class="loading">Loading...</div>
       <div v-if="errorMessage" class="error-message">
         <p>{{ errorMessage }}</p>
-        <button v-if="errorMessage.includes('expired')" @click="redirectToLogin">
+        <button v-if="errorMessage.includes('log in')" @click="redirectToLogin">
         Redirect to log in page
         </button>
         </div>

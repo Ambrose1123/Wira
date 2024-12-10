@@ -12,7 +12,7 @@
       @keyup.enter="redirectToSearch"
       placeholder="Search by username"
     />
-    <button @click="fetchResults" class="search-icon-button">
+    <button @click="redirectToSearch" class="search-icon-button">
       <i class="fas fa-search search-icon"></i>
     </button>
     </div>
@@ -29,7 +29,7 @@
    <div v-if="isLoading" class="loading">Loading...</div>
       <div v-if="errorMessage" class="error-message">
         <p>{{ errorMessage }}</p>
-        <button v-if="errorMessage.includes('expired')" @click="redirectToLogin">
+        <button v-if="errorMessage.includes('log in')" @click="redirectToLogin">
         Redirect to log in page
         </button>
         </div>
@@ -175,17 +175,17 @@
     localStorage.removeItem("sessionId"); // Clear any invalid session
     this.$router.push("/login"); // Redirect to login page
     },
-      // Redirect to the search results page
-    redirectToSearchResults() {
-      this.$router.push({
-        name: "SearchResults",
-        query: {
-          search: this.searchTerm,
-          class_id: this.selectedClass,
-          page: 1, // Always start at page 1 for a new search
-        },
-      });
-    },
+      // Redirect to the same route with updated query parameters
+      redirectToSearch() {
+        this.$router.push({
+          name: "SearchResults",
+          query: {
+            search: this.searchTerm,
+            class_id: this.selectedClass,
+            page: 1, // Reset to page 1 on new search or filter
+          },
+        });
+      },
     changePage(newPage) {
       if (!newPage || newPage < 1 || newPage > this.totalPages) return;
       this.$router.push({
@@ -196,6 +196,13 @@
           page: newPage,
         },
       });
+    },
+    goToSpecificPage() {
+      if (this.targetPage >= 1 && this.targetPage <= this.totalPages) {
+        this.changePage(this.targetPage);
+      } else {
+        alert("Invalid page number.");
+      }
     },
     },
     mounted() {

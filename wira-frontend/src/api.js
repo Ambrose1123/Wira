@@ -24,10 +24,12 @@ export async function fetchRankings(search = "", limit = 10, offset = 0, classId
     if (!response.ok) {
       const errorData = await response.json(); // Parse backend error response
       throw new Error(errorData.error || `API Error: ${response.statusText}`);
+      
     }
     return await response.json();
   } catch (error) {
     console.error("API Error:", error);
+    alert(error);
     throw error;
   }
 }
