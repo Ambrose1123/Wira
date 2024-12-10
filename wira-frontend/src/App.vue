@@ -66,7 +66,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7); /* Black overlay with 50% opacity */
+  background: rgba(0, 0, 0, 0.85); /* Black overlay with 50% opacity */
   z-index: 0; /* Place behind content */
 }
 
@@ -81,7 +81,8 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 16px 32px;
-  background-color: #0A0A5E;
+  background: url('./images/forest.png') no-repeat center center fixed;
+  background-size: cover;
   color: white;
   width: 100vw;
   box-sizing: border-box;
