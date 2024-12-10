@@ -4,20 +4,25 @@
   
       <!-- Filters: Search Input and Class Filter -->
       <div class="filter-container">
-        <input
-          type="text"
-          v-model="searchTerm"
-          @keyup.enter="redirectToSearch"
-          placeholder="Search by username"
-        />
-        <!-- Clickable Search Icon -->
+  <!-- Search Input and Button in one div -->
+  <div class="search-group">
+    <input
+      type="text"
+      v-model="searchTerm"
+      @keyup.enter="redirectToSearch"
+      placeholder="Search by username"
+    />
     <button @click="fetchResults" class="search-icon-button">
-    <i class="fas fa-search search-icon"></i>
+      <i class="fas fa-search search-icon"></i>
     </button>
-        <select v-model="selectedClass" @change="redirectToSearch">
-          <option value="">All Classes</option>
-          <option v-for="id in classIds" :key="id" :value="id">Class {{ id }}</option>
-        </select>
+    </div>
+        <!-- Select Dropdown in its own div -->
+  <div class="select-group">
+    <select v-model="selectedClass" @change="redirectToSearch">
+      <option value="">All Classes</option>
+      <option v-for="id in classIds" :key="id" :value="id">Class {{ id }}</option>
+    </select>
+  </div>
       </div>
       <!-- Loading State -->
       <div v-if="isLoading" class="loading">Loading...</div>
@@ -350,26 +355,43 @@ h1 {
 /* Filter Section */
 .filter-container {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
   margin-bottom: 16px;
-  flex-wrap: wrap;
+}
+/* Group for Search Input and Button */
+.search-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1; /* Allow it to grow */
 }
 
 input[type="text"] {
-  width: clamp(200px, 50%, 400px);
-  padding: clamp(8px, 1.5vw, 12px);
-  font-size: clamp(14px, 2vw, 16px);
+  flex: 1;
+  padding: 8px;
+  height: 40px;
+  font-size: 14px;
   border: 1px solid black;
   border-radius: 4px;
-  box-sizing: border-box; /* Fix top cut-off issue */
+  box-sizing: border-box;
+}
+
+/* Select Group */
+.select-group {
+  width: 100%; /* Full width by default */
 }
 
 select {
-  font-size: clamp(12px, 2vw, 16px);
+  width: 100%; /* Full width for mobile */
   padding: 8px;
-  width: clamp(150px, 50%, 300px);
+  font-size: 14px;
+  height: 40px;
+  border: 1px solid black;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
 /* Table styling */
@@ -377,7 +399,9 @@ select {
   overflow-x: auto;
 }
 .search-icon-button {
-  padding: 10px 12px;
+  width: 40px; /* Fixed width to align with input height */
+  height: 40px; /* Fixed height to match input/select */
+  padding: 0; /* Remove internal padding to keep size uniform */
   background-color: #474747; /* Darker gray for the button */
   color: white;
   border: none;
@@ -386,9 +410,16 @@ select {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.3s ease, transform 0.1s ease-in-out;
 }
+
 .search-icon-button:hover {
   background-color: #5a5a5a; /* Slightly lighter on hover */
+  transform: scale(1.05); /* Slight zoom effect */
+}
+
+.search-icon {
+  font-size: 16px; /* Consistent icon size */
 }
 
 table {
@@ -515,14 +546,6 @@ tbody tr:hover {
 }
 /* Media Queries */
 @media (max-width: 600px) {
-  .filter-container {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  input,
-  select {
-    width: 100%;
-  }
   table {
     font-size: 12px;
   }
@@ -567,7 +590,20 @@ tbody tr:hover {
     padding: 4px 8px;
   }
 }
+/* Media Queries */
+@media (min-width: 600px) {
+  .filter-container {
+    flex-wrap: nowrap; /* Prevent wrapping on larger screens */
+  }
 
+  .search-group {
+    flex: initial; /* Stop growing */
+  }
+
+  .select-group {
+    width: auto; /* Reset width */
+  }
+}
 @media (min-width: 600px) and (max-width: 768px) {
   .filter-container {
     gap: 12px;
