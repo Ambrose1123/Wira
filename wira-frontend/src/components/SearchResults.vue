@@ -503,6 +503,7 @@ tbody tr:hover {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  flex-direction: column; /* Stack controls vertically */ 
   text-align: center; /* Ensure text is centered */
     flex: 0 0 auto; /* Allow buttons to size naturally */
    width: auto; /* Auto width based on content */
