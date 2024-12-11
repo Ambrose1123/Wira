@@ -526,6 +526,7 @@ tbody tr:hover {
 }
 .pagination-btn.prev-next {
   min-width: 80px; /* Fixed size for Previous/Next */
+  text-align: center; /* Ensure text is centered */
 }
 
 .goto-page {
