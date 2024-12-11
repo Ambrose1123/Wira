@@ -442,6 +442,10 @@ tbody tr:hover {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  text-align: center; /* Ensure text is centered */
+    flex: 0 0 auto; /* Allow buttons to size naturally */
+   width: auto; /* Auto width based on content */
+    min-width: unset; /* Remove any minimum width */
   transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out;
 }
 
@@ -520,9 +524,9 @@ tbody tr:hover {
   }
 
     .pagination-btn.prev-next {
-    flex: 1; /* Allow Previous/Next to take available space evenly */
+      max-width:70px;
     font-size: 10px; /* Smaller font */
-    min-width: 25px;
+    min-width: 50px;
   }
 
   .goto-page {

@@ -503,6 +503,10 @@ tbody tr:hover {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  text-align: center; /* Ensure text is centered */
+    flex: 0 0 auto; /* Allow buttons to size naturally */
+   width: auto; /* Auto width based on content */
+    min-width: unset; /* Remove any minimum width */
   transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out;
 }
 
@@ -564,26 +568,25 @@ tbody tr:hover {
   .pagination-controls {
     flex-wrap: nowrap; /* Prevent wrapping */
     justify-content: space-between; /* Align Previous/Next to edges */
-    gap: 4px; /* Smaller gap */
+    gap: 2px; /* Smaller gap */
   }
 
   .page-numbers {
     display: flex;
     justify-content: center;
     flex-wrap: nowrap; /* Keep page numbers in a row */
-    gap: 4px;
+    gap: 2px;
   }
 
   .pagination-btn {
-    padding: 6px 8px; /* Smaller buttons */
-    font-size: 12px; /* Smaller font */
-    min-width: 25px; /* Reduce button width */
+    padding: 3px 5px; /* Smaller buttons */
+    font-size: 7px;
   }
 
     .pagination-btn.prev-next {
-    flex: 1; /* Allow Previous/Next to take available space evenly */
+    max-width:70px;
     font-size: 10px; /* Smaller font */
-    min-width: 25px;
+    min-width: 50px;
   }
 
   .goto-page {
