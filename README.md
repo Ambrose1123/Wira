@@ -2,18 +2,21 @@
 
 ## Technologies Used
 Frontend: Vue.js
+
 Backend: Node.js (Express.js)
+
 Database: PostgreSQL
+
 Authentication: Speakeasy for 2FA, bcrypt for password hashing
+
+Email Sending funciton: AWS SES 
+
+Website Hoting Platform: AWS (frontend: S3, backend: EC2 , database: RDS)
 
 ## . Prerequisites: Ensure you have the following installed:
 Node.js
 
-Docker
-
 PostgreSQL
-
-Nginx
 
 bcrypt
 

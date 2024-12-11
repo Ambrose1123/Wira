@@ -219,19 +219,20 @@
   font-weight: bold;
   color: whitesmoke;
   margin-top: 20px;
+  margin-bottom:20px;
 }
 /* Skeleton Table Styles */
 .skeleton-table {
-  width: 100%;
+  width: 80%;
   border-collapse: collapse;
-  background-color: #f8f8f8;
+  background-color: #2E2E2E;
 }
 
 .skeleton-table th,
 .skeleton-table td {
   padding: 10px;
   border: 1px solid #e0e0e0;
-  text-align: left;
+  text-align: center;
 }
 
 .skeleton-mask {
@@ -362,7 +363,8 @@ select {
 }
 
 table {
-  width: 100%;
+  width: 80%; /* Set table width to 80% */
+  margin: 0 auto; /* Center the table horizontally */
   border-collapse: collapse;
   margin-bottom: 16px;
   background-color: #2E2E2E; /* Light dark grey */
@@ -376,16 +378,17 @@ th {
   border: 1px solid lightgray;
   color: white;
   font-weight: bold;
-  text-align: left;
+  text-align: center;
   text-transform: uppercase; /* Converts all text to uppercase */
   padding: clamp(8px, 2vw, 16px);
-  font-size: clamp(12px, 2vw, 14px);
+  font-size: clamp(12px, 2vw, 14px); 
+  transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out; /* Smooth transition */
 }
 
 td {
   padding: clamp(8px, 2vw, 16px);
   border: 1px solid lightgray;
-  text-align: left;
+  text-align: center;
   font-size: clamp(12px, 2vw, 14px);
 }
 /* Target the first column (Rank) */
@@ -393,7 +396,11 @@ table th:first-child, table td:first-child {
   width: 50px; /* Set a specific width */
   min-width: 50px; /* Ensure it doesn't grow beyond this */
   text-align: center; /* Align text to the center */
-  transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out; /* Smooth transition */
+}
+table th:nth-child(3), table td:nth-child(3) {
+  width: 50px; /* Set a specific width */
+  min-width: 50px; /* Ensure it doesn't grow beyond this */
+  text-align: center; /* Align text to the center */
 }
 thead th:hover {
   background-color: #7227B0; /* Slightly lighter navy blue */
@@ -488,7 +495,11 @@ tbody tr:hover {
 @media (max-width: 600px) {
   table {
     font-size: 12px;
+    width: 100%;
   }
+  .skeleton-table {
+  width: 100%;
+}
   .pagination-controls {
     flex-wrap: nowrap; /* Prevent wrapping */
     justify-content: space-between; /* Align Previous/Next to edges */
