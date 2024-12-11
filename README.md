@@ -19,7 +19,7 @@ if you want to know how you can create the database and the backend server, plea
 
 http://wira-frontend.s3-website-ap-southeast-2.amazonaws.com/login
 
-## . Prerequisites: Ensure you have the installed the required file:
+## . Prerequisites: Ensure you have installed the required file:
 
 Go to the wira-backend directory,
 Install npm and node first, after pulling from this branch.
@@ -75,21 +75,31 @@ CREATE TABLE Session (
 Later create a .env file in the backend folder, which should include your db details:
 
 DATABASE_USER=postgres
+
 DATABASE_PASSWORD=YOURPASSWORD
+
 DATABASE_HOST=localhost( OR Your database host endpoint)
+
 DATABASE_NAME=wira-dashboard (YOUR DATABASE NAME)
+
 DATABASE_PORT=5432
 ## Data generating
 
 Go to generatedata.js in wira-backend, make sure the details about your db is filled, This Part:
 
-const client = new Client({
-  user: 'postgres',  //username
-  host: 'localhost',
-  database: 'wira_dashboard', //the data base name created
-  password: 'Ap79101123', //password for the database
-  port: 5432,
-});
+    const client = new Client({
+    
+    user: 'postgres',  //username
+    
+    host: 'localhost',
+    
+    database: 'wira_dashboard', //the data base name created
+    
+    password: 'Ap79101123', //password for the database
+    
+    port: 5432,
+    
+    });
 
 then search for the section where there is:
 
@@ -151,20 +161,31 @@ Choose a region where SES is available (e.g., us-east-1).
 Create or update your .env file with the following:
 
 AWS_ACCESS_KEY_ID=YOUR_ACCESS_KEY_ID
+
 AWS_SECRET_ACCESS_KEY=YOUR_SECRET_ACCESS_KEY
+
 AWS_REGION=ap-southeast-2
+
 SENDER_EMAIL=your-verified-email@example.com
 
 Now your .env file should look like this:
 
 AWS_ACCESS_KEY_ID=your-access-key-id
+
 AWS_SECRET_ACCESS_KEY=your-secret-accesskey
+
 AWS_REGION=ap-southeast-2
+
 SENDER_EMAIL=your-email
+
 DATABASE_USER=postgres
+
 DATABASE_PASSWORD=yourpassword
+
 DATABASE_HOST=localhost
+
 DATABASE_NAME=wira-dashboard
+
 DATABASE_PORT=5432
 
 after generating go to the wira-backend directory and run the command:
