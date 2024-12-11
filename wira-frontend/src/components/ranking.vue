@@ -393,8 +393,9 @@ td {
 }
 /* Target the first column (Rank) */
 table th:first-child, table td:first-child {
-  width: 50px; /* Set a specific width */
-  min-width: 50px; /* Ensure it doesn't grow beyond this */
+  flex: 0 0 auto; /* Allow buttons to size naturally */
+   width: auto; /* Auto width based on content */
+    min-width: unset; /* Remove any minimum width */
   text-align: center; /* Align text to the center */
 }
 table th:nth-child(3), table td:nth-child(3) {
@@ -416,6 +417,7 @@ tbody tr:hover {
   justify-content: space-between; /* Align "Previous" and "Next" to edges */
   align-items: center;
   gap: 10px;
+  text-align: center; /* Ensure text is centered */
   flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
