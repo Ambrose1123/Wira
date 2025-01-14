@@ -1,6 +1,6 @@
 ##Log in Page:
 
-![image](https://github.com/user-attachments/assets/7103b98c-8be0-4541-b365-8f4465d0a0c7)
+![image](https://github.com/user-attachments/assets/571c04ae-2f20-4e92-a66c-b9b34d1d5944)
 
 #2FA code verification:
 
