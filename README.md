@@ -230,4 +230,6 @@ To log out, please go to the Top right corner and look for the log out button. F
 
 ## LINK: https://drive.google.com/drive/folders/1SjTMVaABp8qZScqpcAbqLGLnUxY2j1Io?usp=sharing
 
+(The following website link is now closed, you may see the screenshot to see how the website looks)
+
 ## WEBSITE LINK : http://wira-frontend.s3-website-ap-southeast-2.amazonaws.com/login
