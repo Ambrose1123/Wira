@@ -14,6 +14,10 @@
 
 ![image](https://github.com/user-attachments/assets/499c9980-cd44-4ba9-a2ff-460c134e9366)
 
+#Search function:
+
+![image](https://github.com/user-attachments/assets/97a646f1-ef6c-4499-a1fd-415dc955f40a)
+
 #Pagination function that supports up to 80000 page!
 
 ![image](https://github.com/user-attachments/assets/7e1331a8-a784-4361-99d2-a7db99fcb998)
